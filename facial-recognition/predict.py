@@ -33,13 +33,15 @@ while True:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # Detect faces
-    faces = faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    faces = faceCascade.detectMultiScale(
+        gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30)
+    )
 
     # For each face found
-    for (x, y, w, h) in faces:
+    for x, y, w, h in faces:
 
         # Recognize the face
-        ID, Confidence = faceRecognizer.predict(gray[y:y + h, x:x + w])
+        ID, Confidence = faceRecognizer.predict(gray[y : y + h, x : x + w])
 
         if ID == 0:
             Person = "pseudo"
@@ -52,26 +54,45 @@ while True:
         elif ID == 4:
             Person = "Bright"
         elif ID == 5:
-            Person = "Bena"  
+            Person = "Bena"
         elif ID == 6:
-            Person = "Sugira"                       
+            Person = "Sugira"
         # Confidence normalization to a 0-100 scale
         Confidence = 100 - Confidence
 
-       
-        if Confidence>45:
+        if Confidence > 45:
             # Create rectangle around the face
-            cv2.rectangle(frame, (x - 20, y - 20), (x + w + 20, y + h + 20), faceRectangleBorderColor, faceRectangleBorderSize)
+            cv2.rectangle(
+                frame,
+                (x - 20, y - 20),
+                (x + w + 20, y + h + 20),
+                faceRectangleBorderColor,
+                faceRectangleBorderSize,
+            )
 
-             # Display name tag
-            cv2.rectangle(frame, (x - 22, y - nametagHeight), (x + w + 22, y - 22), nametagColor, -1)
-            cv2.putText(frame, str(Person) + ": " + str(round(Confidence, 2)) + "%", (x, y-fontBottomMargin), fontFace, fontScale, fontColor, fontWeight)
+            # Display name tag
+            cv2.rectangle(
+                frame,
+                (x - 22, y - nametagHeight),
+                (x + w + 22, y - 22),
+                nametagColor,
+                -1,
+            )
+            cv2.putText(
+                frame,
+                str(Person) + ": " + str(round(Confidence, 2)) + "%",
+                (x, y - fontBottomMargin),
+                fontFace,
+                fontScale,
+                fontColor,
+                fontWeight,
+            )
 
     # Display the resulting frame
-    cv2.imshow('Detecting Faces...', frame)
+    cv2.imshow("Detecting Faces...", frame)
 
     # Exit loop when 'q' is pressed
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
 # Release the camera and close all OpenCV windows
